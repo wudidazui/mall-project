@@ -39,7 +39,7 @@
         <!-- 用于控制Mapper.xml文件的生成 -->
         <sqlMapGenerator targetPackage="com.wangtao.mall.mapper" targetProject="mall-mbg\src\main\resources"/>
         <!-- 用于控制Mapper接口的生成 -->
-        <javaClientGenerator type="XMLMAPPER" targetPackage="com.macro.mall.mapper"
+        <javaClientGenerator type="XMLMAPPER" targetPackage="com.wangtao.mall.mapper"
                              targetProject="mall-mbg\src\main\java"/>
         <!-- 配置需要生成的表，生成全部表tableName设为% -->
         <table tableName="%">
