@@ -1,4 +1,4 @@
-package com.macro.mall;
+package com.wangtao.mall;
 
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
@@ -11,7 +11,6 @@ import java.util.List;
 
 /**
  * MBG代码生成工具
- * Created by macro on 2018/4/26.
  */
 public class Generator {
     public static void main(String[] args) throws Exception {
