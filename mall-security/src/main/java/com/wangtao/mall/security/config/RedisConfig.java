@@ -6,6 +6,5 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 @EnableCaching
-@Configuration
 public class RedisConfig extends BaseRedisConfig {
 }

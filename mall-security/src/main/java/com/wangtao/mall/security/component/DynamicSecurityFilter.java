@@ -7,6 +7,7 @@ import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;
 import org.springframework.security.access.intercept.InterceptorStatusToken;
 import org.springframework.security.web.FilterInvocation;
+import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.util.PathMatcher;
 
@@ -18,7 +19,6 @@ import java.io.IOException;
 /**
  * 动态权限过滤器，用于实现基于路径的动态权限过滤
  */
-@SuppressWarnings("all")
 public class DynamicSecurityFilter extends AbstractSecurityInterceptor implements Filter {
 
     @Autowired

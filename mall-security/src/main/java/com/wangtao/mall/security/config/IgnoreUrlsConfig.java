@@ -4,6 +4,7 @@ package com.wangtao.mall.security.config;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,6 @@ import java.util.List;
  */
 @Getter
 @Setter
-@Configuration
 @ConfigurationProperties(prefix = "secure.ignored")
 public class IgnoreUrlsConfig {
     private List<String> urls = new ArrayList<>();

@@ -18,15 +18,16 @@ import javax.annotation.Resource;
 
 @Configuration
 @EnableWebSecurity
-@SuppressWarnings("all")
 public class SecurityConfig {
 
     @Autowired
     private IgnoreUrlsConfig ignoreUrlsConfig;
 
+    //无权限错误
     @Autowired
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
 
+    //未登录错误
     @Autowired
     private RestAuthenticationEntryPoint restAuthenticationEntryPoint;
 
@@ -74,6 +75,7 @@ public class SecurityConfig {
         if(dynamicSecurityService != null){
             registry.and().addFilterBefore(dynamicSecurityFilter, FilterSecurityInterceptor.class);
         }
+
         return httpSecurity.build();
 
     }
