@@ -4,7 +4,6 @@ import com.wangtao.mall.common.service.RedisService;
 import com.wangtao.mall.mapper.UmsMemberMapper;
 import com.wangtao.mall.model.UmsMember;
 import com.wangtao.mall.portal.service.UmsMemberCacheService;
-import com.wangtao.mall.security.annotation.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,8 @@ import org.springframework.stereotype.Service;
 public class UmsMemberCacheServiceImpl implements UmsMemberCacheService {
     @Autowired
     private RedisService redisService;
-    @Autowired(required = false)
+
+    @Autowired
     private UmsMemberMapper memberMapper;
 
     @Value("${redis.database}")
@@ -43,7 +43,7 @@ public class UmsMemberCacheServiceImpl implements UmsMemberCacheService {
     @Override
     public void delMember(Long memberId) {
         UmsMember umsMember = memberMapper.selectByPrimaryKey(memberId);
-        if(umsMember != null){
+        if (umsMember != null) {
             String key = REDIS_DATABASE + ":" + REDIS_KEY_MEMBER + ":" + umsMember.getUsername();
             redisService.del(key);
         }
@@ -52,17 +52,17 @@ public class UmsMemberCacheServiceImpl implements UmsMemberCacheService {
     @Override
     public void setMember(UmsMember member) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_MEMBER + ":" + member.getUsername();
-        redisService.set(key,member,REDIS_EXPIRE);
+        redisService.set(key, member, REDIS_EXPIRE);
     }
 
-    @CacheException
+//    @CacheException
     @Override
     public void setAuthCode(String telephone, String authCode) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_AUTH_CODE + ":" + telephone;
-        redisService.set(key,authCode,REDIS_EXPIRE_AUTH_CODE);
+        redisService.set(key, authCode, REDIS_EXPIRE_AUTH_CODE);
     }
 
-    @CacheException
+//    @CacheException
     @Override
     public String getAuthCode(String telephone) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_AUTH_CODE + ":" + telephone;

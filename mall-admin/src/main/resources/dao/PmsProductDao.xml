@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wangtao.mall.dao.PmsProductDao">
+    <resultMap id="updateInfoMap" type="com.wangtao.mall.dto.PmsProductResult" extends="com.wangtao.mall.mapper.PmsProductMapper.ResultMapWithBLOBs">
+        <result column="cateParentId" jdbcType="BIGINT" property="cateParentId" />
+        <collection property="productLadderList" columnPrefix="ladder_" resultMap="com.wangtao.mall.mapper.PmsProductLadderMapper.BaseResultMap">
+        </collection>
+        <collection property="productFullReductionList" columnPrefix="full_" resultMap="com.wangtao.mall.mapper.PmsProductFullReductionMapper.BaseResultMap">
+        </collection>
+        <collection property="memberPriceList" columnPrefix="member_" resultMap="com.wangtao.mall.mapper.PmsMemberPriceMapper.BaseResultMap">
+        </collection>
+        <collection property="skuStockList" columnPrefix="sku_" resultMap="com.wangtao.mall.mapper.PmsSkuStockMapper.BaseResultMap">
+        </collection>
+        <collection property="productAttributeValueList" columnPrefix="attribute_" resultMap="com.wangtao.mall.mapper.PmsProductAttributeValueMapper.BaseResultMap">
+        </collection>
+        <collection property="subjectProductRelationList" column="{productId=id}" select="selectSubjectProductRelationByProductId"/>
+        <collection property="prefrenceAreaProductRelationList" column="{productId=id}" select="selectPrefrenceAreaProductRelationByProductId"/>
+    </resultMap>
+
+    <select id="getUpdateInfo" resultMap="updateInfoMap">
+        SELECT *,
+            pc.parent_id cateParentId,
+            pl.id ladder_id, pl.product_id ladder_product_id,pl.discount ladder_discount,pl.count ladder_count,pl.price ladder_price,
+            pfr.id full_id, pfr.product_id full_product_id,pfr.full_price full_full_price,pfr.reduce_price full_reduce_price,
+            mp.id member_id, mp.product_id member_product_id,mp.member_level_id member_member_level_id,mp.member_price member_member_price,mp.member_level_name member_member_level_name,
+            ss.id sku_id,ss.product_id sku_product_id,ss.price sku_price,ss.promotion_price sku_promotion_price,ss.low_stock sku_low_stock,ss.pic sku_pic,ss.sale sku_sale,ss.sku_code sku_sku_code,ss.stock sku_stock,ss.sp_data sku_sp_data,
+            pav.id attribute_id,pav.product_id attribute_product_id,pav.product_attribute_id attribute_product_attribute_id,pav.`value` attribute_value
+        from pms_product p
+                 LEFT JOIN pms_product_category pc ON p.product_category_id = pc.id
+                 LEFT JOIN pms_product_ladder pl ON p.id = pl.product_id
+                 LEFT JOIN pms_product_full_reduction pfr ON pfr.product_id = p.id
+                 LEFT JOIN pms_member_price mp ON mp.product_id = p.id
+                 LEFT JOIN pms_sku_stock ss ON ss.product_id = p.id
+                 LEFT JOIN pms_product_attribute_value pav ON pav.product_id = p.id
+        WHERE p.id = #{id}
+    </select>
+
+    <select id="selectSubjectProductRelationByProductId" resultMap="com.wangtao.mall.mapper.CmsSubjectProductRelationMapper.BaseResultMap">
+        select * from cms_subject_product_relation where product_id=#{productId}
+    </select>
+    <select id="selectPrefrenceAreaProductRelationByProductId" resultMap="com.wangtao.mall.mapper.CmsPrefrenceAreaProductRelationMapper.BaseResultMap">
+        select * from cms_prefrence_area_product_relation where product_id=#{productId}
+    </select>
+
+</mapper>

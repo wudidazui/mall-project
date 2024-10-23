@@ -3,6 +3,8 @@ package com.wangtao.mall.mapper;
 import com.wangtao.mall.model.UmsMember;
 import com.wangtao.mall.model.UmsMemberExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 public interface UmsMemberMapper {
