@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.wangtao.mall.portal.dao.PortalProductDao">
+    <resultMap id="promotionProductMap" type="com.wangtao.mall.portal.domin.PromotionProduct" extends="com.wangtao.mall.mapper.PmsProductMapper.BaseResultMap">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <collection property="skuStockList" columnPrefix="sku_" resultMap="com.wangtao.mall.mapper.PmsSkuStockMapper.BaseResultMap"></collection>
+        <collection property="productLadderList" columnPrefix="ladder_" resultMap="com.wangtao.mall.mapper.PmsProductLadderMapper.BaseResultMap"></collection>
+        <collection property="productFullReductionList" columnPrefix="full_" resultMap="com.wangtao.mall.mapper.PmsProductFullReductionMapper.BaseResultMap"></collection>
+    </resultMap>
+
     <select id="getAvailableCouponList" resultMap="com.wangtao.mall.mapper.SmsCouponMapper.BaseResultMap">
         SELECT *
         FROM sms_coupon
@@ -15,6 +22,64 @@
             SELECT c.* from sms_coupon_product_relation cp LEFT JOIN sms_coupon c ON cp.coupon_id = c.id
             WHERE c.use_type = 2 AND c.start_time &lt; NOW() AND c.end_time > NOW() AND cp.product_id = #{productId}
         )
+    </select>
 
+    <select id="getPromotionProductList" resultMap="promotionProductMap">
+        SELECT
+            p.id,
+            p.`name`,
+            p.promotion_type,
+            p.gift_growth,
+            p.gift_point,
+            sku.id sku_id,
+            sku.price sku_price,
+            sku.promotion_price sku_promotion_price,
+            sku.stock sku_stock,
+            sku.low_stock sku_low_stock,
+            ladder.id ladder_id,
+            ladder.count ladder_count,
+            ladder.discount ladder_discount,
+            reduction.id full_id,
+            reduction.full_price full_full_price,
+            reduction.reduce_price full_reduce_price
+        from pms_product p
+                 LEFT JOIN pms_sku_stock sku ON p.id = sku.product_id
+                 LEFT JOIN pms_product_ladder ladder ON p.id = ladder.product_id
+                 LEFT JOIN pms_product_full_reduction reduction ON p.id = reduction.product_id
+        WHERE p.id IN
+        <foreach collection="ids" open="(" close=")" item="id" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <resultMap id="cartProductMap" type="com.wangtao.mall.portal.domin.CartProduct">
+        <id column="id" jdbcType="BIGINT" property="id"></id>
+        <collection property="productAttributeList" column="attr_" resultMap="com.wangtao.mall.mapper.PmsProductAttributeMapper.BaseResultMap">
+        </collection>
+        <collection property="skuStockList" column="sku_" resultMap="com.wangtao.mall.mapper.PmsProductAttributeMapper.BaseResultMap">
+        </collection>
+    </resultMap>
+
+    <select id="getCartProduct" resultMap="cartProductMap">
+        SELECT
+            p.id id,
+            p.`name` name,
+            p.sub_title subTitle,
+            p.price price,
+            p.pic pic,
+            p.product_attribute_category_id productAttributeCategoryId,
+            p.stock stock,
+            pa.id attr_id,
+            pa.`name` attr_name,
+            ps.id sku_id,
+            ps.sku_code sku_code,
+            ps.price sku_price,
+            ps.stock sku_stock,
+            ps.pic sku_pic
+
+        from pms_product p
+                 LEFT JOIN pms_product_attribute pa ON p.product_attribute_category_id = pa.product_attribute_category_id
+                 LEFT JOIN pms_sku_stock ps ON p.id = ps.product_id
+        WHERE p.id = #{id} AND pa.type = 0 ORDER BY pa.sort desc
     </select>
 </mapper>

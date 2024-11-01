@@ -19,7 +19,7 @@ public class OmsOrderSetting implements Serializable {
     private Integer finishOvertime;
 
     @ApiModelProperty(value = "订单完成后自动好评时间（天）")
-    private Integer commentOvertime;
+        private Integer commentOvertime;
 
     private static final long serialVersionUID = 1L;
 

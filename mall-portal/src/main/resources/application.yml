@@ -33,7 +33,7 @@ secure:
       - /favicon.ico
       - /druid/**
       - /actuator/**
-      - /sso/**
+      - /member/**
       - /home/**
       - /product/**
       - /brand/**
@@ -49,5 +49,6 @@ redis:
   expire:
     authCode: 90 # 验证码超期时间
     common: 86400 # 24小时
+
 
 
